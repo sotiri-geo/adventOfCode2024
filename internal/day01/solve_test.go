@@ -1,6 +1,9 @@
 package day01
 
-import "testing"
+import (
+	"maps"
+	"testing"
+)
 
 func TestDistance(t *testing.T) {
 	distanceTests := map[string]struct {
@@ -69,5 +72,65 @@ func TestPart1(t *testing.T) {
 		if got != want {
 			t.Errorf("got %d, want %d", got, want)
 		}
+	})
+}
+
+// Part 2 tests
+
+func TestCounter(t *testing.T) {
+
+	t.Run("Creates a counter from a slice of ints", func(t *testing.T) {
+		ids := []int{1, 1, 4, 5}
+		got := Counter(ids)
+		want := map[int]int{
+			1: 2,
+			4: 1,
+			5: 1,
+		}
+
+		if !maps.Equal(got, want) {
+			t.Errorf("got %+v, want %+v", got, want)
+		}
+	})
+}
+
+func TestSimilarityScore(t *testing.T) {
+
+	t.Run("computes similarity score with 3 ids", func(t *testing.T) {
+		leftIds := []int{1, 3, 3}
+		rightIds := []int{2, 3, 9}
+
+		got := SimilarityScore(leftIds, rightIds)
+		want := 6
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
+
+	t.Run("computes basic similarity score with 5 ids", func(t *testing.T) {
+		leftIds := []int{1, 2, 3, 7, 8}
+		rightIds := []int{2, 2, 4, 5, 3}
+
+		got := SimilarityScore(leftIds, rightIds)
+		want := 7
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
+}
+
+func TestPart2(t *testing.T) {
+
+	t.Run("generates part 2 score for example case", func(t *testing.T) {
+		inputs := []string{"3   4", "4   3", "2   5", "1   3", "3   9", "3   3"}
+		got := Part2(inputs)
+		want := 31
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+
 	})
 }
