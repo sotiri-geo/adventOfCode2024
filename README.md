@@ -16,3 +16,10 @@ adventOfCode2024/
 │       └── solve_test.go    # Unit tests for day 1
 │── inputs/
 │   └── day01.txt            # Your puzzle input
+
+
+To run a day01 solution
+
+```sh
+go run ./cmd/day01
+```
