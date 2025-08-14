@@ -21,8 +21,14 @@ adventOfCode2024/
 │   └── day01.txt            # Your puzzle input
 ```
 
-To run a day01 solution
+To run a `day01` solution
 
 ```sh
 go run ./cmd/day01
+```
+
+To run tests for `day01`
+
+```sh
+go test ./internal/day01
 ```
