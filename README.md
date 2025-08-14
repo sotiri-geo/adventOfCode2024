@@ -1,8 +1,11 @@
 # Advent of code 2024
 
 
-Folder structure is as such:
+This is part of a pet project in order to learn Go. Inspired by [Learn Go with tests](https://quii.gitbook.io/learn-go-with-test) blog to apply TDD methodology whilst attempting to solve AOC problems.
 
+Project structure is as follows:
+
+```sh
 adventOfCode2024/
 │── go.mod
 │── go.sum
@@ -16,7 +19,7 @@ adventOfCode2024/
 │       └── solve_test.go    # Unit tests for day 1
 │── inputs/
 │   └── day01.txt            # Your puzzle input
-
+```
 
 To run a day01 solution
 
