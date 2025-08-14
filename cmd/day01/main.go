@@ -17,4 +17,5 @@ func main() {
 	input := strings.Split(strings.TrimSpace(string(data)), "\n")
 
 	fmt.Println("Part 1:", day01.Part1(input))
+	fmt.Println("Part 2:", day01.Part2(input))
 }
