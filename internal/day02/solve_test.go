@@ -7,28 +7,26 @@ import "testing"
 // between 1 and 3 inclusive
 
 func TestIncreaseWithinBounds(t *testing.T) {
-	t.Run("increases within bounds", func(t *testing.T) {
-		startLevel := 3
-		endLevel := 5
-		got := IncreaseWithinBounds(startLevel, endLevel)
-		want := true
+	increasingTests := map[string]struct {
+		Start int
+		End   int
+		Want  bool
+	}{
+		"Within bounds of 1 to 3":  {Start: 1, End: 3, Want: true},
+		"Outside bounds of 1 to 3": {Start: 0, End: 5, Want: false},
+		"Strictly decreasing":      {Start: 5, End: 3, Want: false},
+		"Constant":                 {Start: 2, End: 2, Want: false},
+	}
 
-		if got != want {
-			t.Errorf("got %v, want %v, given start level %d to end level %d", got, want, startLevel, endLevel)
-		}
-	})
+	for name, tt := range increasingTests {
+		t.Run(name, func(t *testing.T) {
+			got := IncreaseWithinBounds(tt.Start, tt.End)
 
-	t.Run("increase out of bounds", func(t *testing.T) {
-		startLevel := 3
-		endLevel := 7
-
-		got := IncreaseWithinBounds(startLevel, endLevel)
-		want := false
-
-		if got != want {
-			t.Errorf("got %v, want %v, given start level %d to end level %d", got, want, startLevel, endLevel)
-		}
-	})
+			if got != tt.Want {
+				t.Errorf("got %v, want %v, given start %d and end %d ", got, tt.Want, tt.Start, tt.End)
+			}
+		})
+	}
 }
 
 func TestIsIncreasing(t *testing.T) {
