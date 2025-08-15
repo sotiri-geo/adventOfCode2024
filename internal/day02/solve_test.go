@@ -29,28 +29,6 @@ func TestIncreaseWithinBounds(t *testing.T) {
 	}
 }
 
-func TestIsIncreasing(t *testing.T) {
-	t.Run("report is increasing", func(t *testing.T) {
-		given := []int{1, 3, 6, 7, 9}
-		got := IsIncreasing(given)
-		want := true
-
-		if got != want {
-			t.Errorf("got %v, want %v, given %+v", got, want, given)
-		}
-	})
-
-	t.Run("report is not increasing", func(t *testing.T) {
-		given := []int{1, 3, 6, 4, 9}
-		got := IsIncreasing(given)
-		want := false
-
-		if got != want {
-			t.Errorf("got %v, want %v, given %v", got, want, given)
-		}
-	})
-}
-
 func TestDecreaseWithinBounds(t *testing.T) {
 	decreasingTests := map[string]struct {
 		Start int
@@ -72,4 +50,26 @@ func TestDecreaseWithinBounds(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestIsIncreasing(t *testing.T) {
+	t.Run("report is increasing", func(t *testing.T) {
+		given := []int{1, 3, 6, 7, 9}
+		got := IsIncreasing(given)
+		want := true
+
+		if got != want {
+			t.Errorf("got %v, want %v, given %+v", got, want, given)
+		}
+	})
+
+	t.Run("report is not increasing", func(t *testing.T) {
+		given := []int{1, 3, 6, 4, 9}
+		got := IsIncreasing(given)
+		want := false
+
+		if got != want {
+			t.Errorf("got %v, want %v, given %v", got, want, given)
+		}
+	})
 }
