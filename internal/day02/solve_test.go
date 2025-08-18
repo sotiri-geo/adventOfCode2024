@@ -139,3 +139,27 @@ func TestPart1(t *testing.T) {
 		}
 	})
 }
+
+// Part 2 tests
+
+func TestIsSafeWithTolerance(t *testing.T) {
+	t.Run("Report is safe when allowing for tolerance", func(t *testing.T) {
+		report := []int{1, 3, 2, 4, 5}
+		got := IsSafeWithTolerance(report)
+		want := true
+
+		if got != want {
+			t.Errorf("got %v, want %v given %+v", got, want, report)
+		}
+	})
+
+	t.Run("Repor is unsafe after allowing for tolerance", func(t *testing.T) {
+		report := []int{1, 2, 7, 8, 9}
+		got := IsSafeWithTolerance(report)
+		want := false
+
+		if got != want {
+			t.Errorf("got %v, want %v given %+v", got, want, report)
+		}
+	})
+}

@@ -41,8 +41,37 @@ func IsDecreasing(report []int) bool {
 	return decreasing
 }
 
+func removeIndex(i int, array []int) []int {
+	newArray := []int{}
+
+	for idx, value := range array {
+		if idx == i {
+			continue
+		}
+		newArray = append(newArray, value)
+	}
+	return newArray
+}
+
+func IsDecreasingWithTolerance(report []int) bool {
+	return true
+}
+
 func IsSafe(report []int) bool {
 	return IsIncreasing(report) || IsDecreasing(report)
+}
+
+func IsSafeWithTolerance(report []int) bool {
+	if IsSafe(report) {
+		return true
+	}
+	// run a check after remove any element once
+	for i := range report {
+		if IsSafe(removeIndex(i, report)) {
+			return true
+		}
+	}
+	return false
 }
 
 func toInts(strs []string) []int {
