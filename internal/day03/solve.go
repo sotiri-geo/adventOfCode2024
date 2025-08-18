@@ -2,6 +2,7 @@ package day03
 
 import (
 	"errors"
+	"fmt"
 	"regexp"
 	"strconv"
 )
@@ -13,60 +14,64 @@ const (
 	DISABLE           = "don't()"
 )
 
+// Compile regex patterns once at package init for better performance
+var (
+	mulRegex                = regexp.MustCompile(REGEX_MUL)
+	conditionalWithMulRegex = regexp.MustCompile(REGEX_MUL + "|" + REGEX_CONDITIONAL)
+	numberRegex             = regexp.MustCompile(`\d+`)
+)
+
 var ErrInsufficientMultiplyArgs = errors.New("cannot multiply without two numbers.")
 
 func Multiply(expression string) (int, error) {
 	// We assume that the expression here can be evaluated
-	re := regexp.MustCompile(`\d+`)
-
-	matches := re.FindAllString(expression, -1)
+	matches := numberRegex.FindAllString(expression, -1)
 
 	if len(matches) != 2 {
 		return 0, ErrInsufficientMultiplyArgs
 	}
 
-	nums := make([]int, len(matches))
+	// preallocate with known capacity
+	nums := make([]int, 0, 2)
 
-	for i, value := range matches {
-		num, _ := strconv.Atoi(value)
-		nums[i] = num
+	for _, match := range matches {
+		num, err := strconv.Atoi(match)
+		if err != nil {
+			return 0, fmt.Errorf("invalid number %q: %w", match, err)
+		}
+		nums = append(nums, num)
 	}
 
 	return nums[0] * nums[1], nil
 }
 
 func ExtractMultiply(input string) []string {
-
-	re := regexp.MustCompile(REGEX_MUL)
-
-	return re.FindAllString(input, -1)
+	return mulRegex.FindAllString(input, -1)
 }
 
-func sumExpressions(expressions []string) int {
+func sumExpressions(expressions []string) (int, error) {
 	total := 0
 
 	for _, expression := range expressions {
 		num, err := Multiply(expression)
 		if err != nil {
-			panic(err)
+			return 0, fmt.Errorf("failed to multiply expression %q: %w", expression, err)
 		}
 		total += num
 	}
 
-	return total
+	return total, nil
 }
 
 func Part1(input string) int {
-	return sumExpressions(ExtractMultiply(input))
+	total, _ := sumExpressions(ExtractMultiply(input))
+	return total
 }
 
 // Part2 we need to extract the do() and don't()
 
 func ExtractConditionalWithMul(input string) []string {
-
-	re := regexp.MustCompile(REGEX_MUL + "|" + REGEX_CONDITIONAL)
-
-	return re.FindAllString(input, -1)
+	return conditionalWithMulRegex.FindAllString(input, -1)
 }
 
 func FilterExpressions(expressions []string) []string {
@@ -93,5 +98,6 @@ func FilterExpressions(expressions []string) []string {
 }
 
 func Part2(input string) int {
-	return sumExpressions(FilterExpressions(ExtractConditionalWithMul(input)))
+	total, _ := sumExpressions(FilterExpressions(ExtractConditionalWithMul(input)))
+	return total
 }
