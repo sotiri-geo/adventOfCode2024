@@ -143,23 +143,21 @@ func TestPart1(t *testing.T) {
 // Part 2 tests
 
 func TestIsSafeWithTolerance(t *testing.T) {
-	t.Run("Report is safe when allowing for tolerance", func(t *testing.T) {
-		report := []int{1, 3, 2, 4, 5}
-		got := IsSafeWithTolerance(report)
-		want := true
+	safWithToleranceTest := map[string]struct {
+		Report []int
+		Want   bool
+	}{
+		"Report is safe when allowing for tolerance":    {Report: []int{1, 3, 2, 4, 5}, Want: true},
+		"Report is unsafe after allowing for tolerance": {Report: []int{1, 2, 7, 8, 9}, Want: false},
+	}
 
-		if got != want {
-			t.Errorf("got %v, want %v given %+v", got, want, report)
-		}
-	})
+	for name, tt := range safWithToleranceTest {
+		t.Run(name, func(t *testing.T) {
+			got := IsSafeWithTolerance(tt.Report)
 
-	t.Run("Repor is unsafe after allowing for tolerance", func(t *testing.T) {
-		report := []int{1, 2, 7, 8, 9}
-		got := IsSafeWithTolerance(report)
-		want := false
-
-		if got != want {
-			t.Errorf("got %v, want %v given %+v", got, want, report)
-		}
-	})
+			if got != tt.Want {
+				t.Errorf("got %v, want %v, given %+v", got, tt.Want, tt.Report)
+			}
+		})
+	}
 }
