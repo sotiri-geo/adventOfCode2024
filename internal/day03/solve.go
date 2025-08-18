@@ -27,3 +27,10 @@ func Multiply(expression string) (int, error) {
 
 	return nums[0] * nums[1], nil
 }
+
+func ExtractMultiply(input string) []string {
+
+	re := regexp.MustCompile(`mul\(\d{0,3},\d{0,3}\)`)
+
+	return re.FindAllString(input, -1)
+}
