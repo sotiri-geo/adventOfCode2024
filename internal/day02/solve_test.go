@@ -149,6 +149,7 @@ func TestIsSafeWithTolerance(t *testing.T) {
 	}{
 		"Report is safe when allowing for tolerance":    {Report: []int{1, 3, 2, 4, 5}, Want: true},
 		"Report is unsafe after allowing for tolerance": {Report: []int{1, 2, 7, 8, 9}, Want: false},
+		"Report is safe without any tolerance":          {Report: []int{7, 6, 4, 2, 1}, Want: true},
 	}
 
 	for name, tt := range safWithToleranceTest {
