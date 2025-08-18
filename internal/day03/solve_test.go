@@ -53,6 +53,41 @@ func TestPart1(t *testing.T) {
 	})
 }
 
+func TestExtractConditionalWithMul(t *testing.T) {
+
+	t.Run("extract both conditional and mul statements", func(t *testing.T) {
+		input := "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)"
+		got := ExtractConditionalWithMul(input)
+		want := []string{"mul(2,4)", "don't()", "mul(5,5)"}
+
+		if !slices.Equal(got, want) {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+}
+
+func TestFilterExpressions(t *testing.T) {
+	t.Run("keep first mul statement", func(t *testing.T) {
+		expressions := []string{"mul(2,4)"}
+		got := FilterExpressions(expressions)
+		want := []string{"mul(2,4)"}
+
+		if !slices.Equal(got, want) {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("disable second mul statement", func(t *testing.T) {
+		expressions := []string{"mul(2,4)", "don't()", "mul(5,5)"}
+		got := FilterExpressions(expressions)
+		want := []string{"mul(2,4)"}
+
+		if !slices.Equal(got, want) {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+}
+
 func assertMultiplyEquals(t testing.TB, got, want int) {
 	t.Helper()
 	if got != want {

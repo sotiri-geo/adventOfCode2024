@@ -6,6 +6,13 @@ import (
 	"strconv"
 )
 
+const (
+	REGEX_MUL         = `mul\(\d{0,3},\d{0,3}\)`
+	REGEX_CONDITIONAL = `do?(n\'t)\(\)`
+	ENABLE            = "do()"
+	DISABLE           = "don't()"
+)
+
 var ErrInsufficientMultiplyArgs = errors.New("cannot multiply without two numbers.")
 
 func Multiply(expression string) (int, error) {
@@ -30,7 +37,7 @@ func Multiply(expression string) (int, error) {
 
 func ExtractMultiply(input string) []string {
 
-	re := regexp.MustCompile(`mul\(\d{0,3},\d{0,3}\)`)
+	re := regexp.MustCompile(REGEX_MUL)
 
 	return re.FindAllString(input, -1)
 }
@@ -51,4 +58,36 @@ func sumExpressions(expressions []string) int {
 
 func Part1(input string) int {
 	return sumExpressions(ExtractMultiply(input))
+}
+
+// Part2 we need to extract the do() and don't()
+
+func ExtractConditionalWithMul(input string) []string {
+
+	re := regexp.MustCompile(REGEX_MUL + "|" + REGEX_CONDITIONAL)
+
+	return re.FindAllString(input, -1)
+}
+
+func FilterExpressions(expressions []string) []string {
+	keep := []string{}
+	var enable = true
+
+	for _, exp := range expressions {
+		if exp == ENABLE {
+			enable = true
+			continue
+		}
+
+		if exp == DISABLE {
+			enable = false
+			continue
+		}
+
+		if enable {
+			keep = append(keep, exp)
+		}
+	}
+
+	return keep
 }
