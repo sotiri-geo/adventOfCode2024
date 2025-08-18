@@ -102,3 +102,16 @@ func Part1(inputs []string) int {
 
 	return safeCount
 }
+
+func Part2(inputs []string) int {
+	var safeCount = 0
+
+	for _, report := range inputs {
+		parsedReport := toInts(strings.Fields(report))
+		if IsSafeWithTolerance(parsedReport) {
+			safeCount++
+		}
+	}
+
+	return safeCount
+}

@@ -162,3 +162,25 @@ func TestIsSafeWithTolerance(t *testing.T) {
 		})
 	}
 }
+
+func TestPart2(t *testing.T) {
+	t.Run("One report which requires tolerance is safe", func(t *testing.T) {
+		inputs := []string{"1 3 2 4 5"}
+		got := Part2(inputs)
+		want := 1
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
+
+	t.Run("Four out of six reports are safe", func(t *testing.T) {
+		inputs := []string{"7 6 4 2 1", "1 2 7 8 9", "9 7 6 2 1", "1 3 2 4 5", "8 6 4 4 1", "1 3 6 7 9"}
+		got := Part2(inputs)
+		want := 4
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
+}
