@@ -64,6 +64,16 @@ func TestExtractConditionalWithMul(t *testing.T) {
 			t.Errorf("got %v, want %v", got, want)
 		}
 	})
+
+	t.Run("multiple do and don'ts", func(t *testing.T) {
+		input := "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"
+		got := ExtractConditionalWithMul(input)
+		want := []string{"mul(2,4)", "don't()", "mul(5,5)", "mul(11,8)", "do()", "mul(8,5)"}
+
+		if !slices.Equal(got, want) {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
 }
 
 func TestFilterExpressions(t *testing.T) {
@@ -84,6 +94,18 @@ func TestFilterExpressions(t *testing.T) {
 
 		if !slices.Equal(got, want) {
 			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+}
+
+func TestPart2(t *testing.T) {
+	t.Run("captures uncorrupted conditional statments", func(t *testing.T) {
+		input := "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"
+		got := Part2(input)
+		want := 48
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
 		}
 	})
 }

@@ -17,4 +17,5 @@ func main() {
 	input := string(data)
 
 	fmt.Println("Part 1:", day03.Part1(input))
+	fmt.Println("Part 2:", day03.Part2(input))
 }

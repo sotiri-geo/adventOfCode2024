@@ -8,7 +8,7 @@ import (
 
 const (
 	REGEX_MUL         = `mul\(\d{0,3},\d{0,3}\)`
-	REGEX_CONDITIONAL = `do?(n\'t)\(\)`
+	REGEX_CONDITIONAL = `do(n\'t){0,1}\(\)`
 	ENABLE            = "do()"
 	DISABLE           = "don't()"
 )
@@ -43,7 +43,7 @@ func ExtractMultiply(input string) []string {
 }
 
 func sumExpressions(expressions []string) int {
-	var total = 0
+	total := 0
 
 	for _, expression := range expressions {
 		num, err := Multiply(expression)
@@ -90,4 +90,8 @@ func FilterExpressions(expressions []string) []string {
 	}
 
 	return keep
+}
+
+func Part2(input string) int {
+	return sumExpressions(FilterExpressions(ExtractConditionalWithMul(input)))
 }
