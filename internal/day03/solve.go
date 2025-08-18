@@ -34,3 +34,19 @@ func ExtractMultiply(input string) []string {
 
 	return re.FindAllString(input, -1)
 }
+
+func Part1(input string) int {
+	expressions := ExtractMultiply(input)
+
+	var total = 0
+
+	for _, expression := range expressions {
+		num, err := Multiply(expression)
+		if err != nil {
+			panic(err)
+		}
+		total += num
+	}
+
+	return total
+}
