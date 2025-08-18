@@ -35,9 +35,7 @@ func ExtractMultiply(input string) []string {
 	return re.FindAllString(input, -1)
 }
 
-func Part1(input string) int {
-	expressions := ExtractMultiply(input)
-
+func sumExpressions(expressions []string) int {
 	var total = 0
 
 	for _, expression := range expressions {
@@ -49,4 +47,8 @@ func Part1(input string) int {
 	}
 
 	return total
+}
+
+func Part1(input string) int {
+	return sumExpressions(ExtractMultiply(input))
 }
