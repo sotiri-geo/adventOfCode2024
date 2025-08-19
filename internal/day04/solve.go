@@ -169,3 +169,16 @@ func Part1(puzzle [][]string) int {
 	}
 	return count
 }
+
+func To2DMatrix(input []string) [][]string {
+	output := make([][]string, len(input))
+
+	for row := 0; row < len(input); row++ {
+		// allocate each row with a slice of size len(input[row])
+		output[row] = make([]string, len(input[row]))
+		for col := 0; col < len(input[row]); col++ {
+			output[row][col] = string(input[row][col])
+		}
+	}
+	return output
+}

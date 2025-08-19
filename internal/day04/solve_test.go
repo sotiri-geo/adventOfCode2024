@@ -218,4 +218,26 @@ func TestPart1(t *testing.T) {
 			t.Errorf("got %d, want %d", got, want)
 		}
 	})
+
+	t.Run("Has XMAS occur 18 times. Example input.", func(t *testing.T) {
+		input := []string{
+			"MMMSXXMASM",
+			"MSAMXMSMSA",
+			"AMXSXMAAMM",
+			"MSAMASMSMX",
+			"XMASAMXAMM",
+			"XXAMMXXAMA",
+			"SMSMSASXSS",
+			"SAXAMASAAA",
+			"MAMMMXMMMM",
+			"MXMXAXMASX",
+		}
+		puzzle := To2DMatrix(input)
+		got := Part1(puzzle)
+		want := 18
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
 }
