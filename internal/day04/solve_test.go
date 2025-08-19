@@ -99,3 +99,99 @@ func TestUpSearchXmas(t *testing.T) {
 		})
 	}
 }
+
+func TestUpRightSearchXmas(t *testing.T) {
+	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A", "X"}, {"S", "S", "A", "S"}, {"A", "S", "A", "S"}, {"M", "M", "A", "S"}, {"X", "S", "A", "M"}}, Count: 0}
+	upRightSearchTests := []struct {
+		name string
+		row  int
+		col  int
+		want bool
+	}{
+		{name: "Found XMAS", row: 4, col: 0, want: true},
+		{name: "Cannot find XMAS", row: 3, col: 0, want: false},
+		{name: "Out of bounds", row: 2, col: 0, want: false},
+	}
+
+	for _, tt := range upRightSearchTests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := searchXmas.UpRightSearch(tt.row, tt.col)
+
+			if got != tt.want {
+				t.Errorf("got %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestUpLeftSearchXmas(t *testing.T) {
+	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A", "X"}, {"S", "S", "A", "S"}, {"A", "A", "A", "S"}, {"M", "M", "M", "S"}, {"X", "S", "A", "X"}}, Count: 0}
+	upLeftSearchTests := []struct {
+		name string
+		row  int
+		col  int
+		want bool
+	}{
+		{name: "Found XMAS", row: 4, col: 3, want: true},
+		{name: "Cannot find XMAS", row: 3, col: 3, want: false},
+		{name: "Out of bounds", row: 2, col: 0, want: false},
+	}
+
+	for _, tt := range upLeftSearchTests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := searchXmas.UpLeftSearch(tt.row, tt.col)
+
+			if got != tt.want {
+				t.Errorf("got %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestDownRightSearchXmas(t *testing.T) {
+	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A", "X"}, {"S", "M", "A", "S"}, {"A", "A", "A", "S"}, {"M", "M", "M", "S"}, {"X", "S", "A", "X"}}, Count: 0}
+	downRightSearchTests := []struct {
+		name string
+		row  int
+		col  int
+		want bool
+	}{
+		{name: "Found XMAS", row: 0, col: 0, want: true},
+		{name: "Cannot find XMAS", row: 1, col: 0, want: false},
+		{name: "Out of bounds", row: 3, col: 0, want: false},
+	}
+
+	for _, tt := range downRightSearchTests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := searchXmas.DownRightSearch(tt.row, tt.col)
+
+			if got != tt.want {
+				t.Errorf("got %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestDownLeftSearchXmas(t *testing.T) {
+	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A", "X"}, {"S", "M", "M", "S"}, {"A", "A", "A", "S"}, {"S", "M", "M", "S"}, {"X", "S", "A", "X"}}, Count: 0}
+	downLeftSearchTests := []struct {
+		name string
+		row  int
+		col  int
+		want bool
+	}{
+		{name: "Found XMAS", row: 0, col: 3, want: true},
+		{name: "Cannot find XMAS", row: 1, col: 3, want: false},
+		{name: "Out of bounds", row: 3, col: 0, want: false},
+	}
+
+	for _, tt := range downLeftSearchTests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := searchXmas.DownLeftSearch(tt.row, tt.col)
+
+			if got != tt.want {
+				t.Errorf("got %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

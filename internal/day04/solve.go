@@ -1,6 +1,8 @@
 package day04
 
-import "strings"
+import (
+	"strings"
+)
 
 const (
 	XMAS       = "XMAS"
@@ -62,4 +64,65 @@ func (s *SearchXmas) UpSearch(row, col int) bool {
 
 	found := buffer.String()
 	return found == XMAS
+}
+
+func (s *SearchXmas) UpRightSearch(row, col int) bool {
+	var buffer strings.Builder
+	buffer.Grow(xmasLength)
+
+	for s.isValid(row, col, buffer) {
+		buffer.WriteString(s.matrix[row][col])
+		row--
+		col++
+	}
+
+	found := buffer.String()
+	return found == XMAS
+}
+
+func (s *SearchXmas) UpLeftSearch(row, col int) bool {
+	var buffer strings.Builder
+
+	for s.isValid(row, col, buffer) {
+		buffer.WriteString(s.matrix[row][col])
+		row--
+		col--
+	}
+
+	found := buffer.String()
+	return found == XMAS
+}
+
+func (s *SearchXmas) DownRightSearch(row, col int) bool {
+	var buffer strings.Builder
+
+	for s.isValid(row, col, buffer) {
+		buffer.WriteString(s.matrix[row][col])
+		row++
+		col++
+	}
+
+	found := buffer.String()
+	return found == XMAS
+}
+
+func (s *SearchXmas) DownLeftSearch(row, col int) bool {
+	var buffer strings.Builder
+
+	for s.isValid(row, col, buffer) {
+		buffer.WriteString(s.matrix[row][col])
+		row++
+		col--
+	}
+
+	found := buffer.String()
+	return found == XMAS
+}
+
+func (s *SearchXmas) isValid(row, col int, buffer strings.Builder) bool {
+	rowInRange := row >= 0 && row < len(s.matrix)
+	colInRange := col >= 0 && col < len(s.matrix[0])
+	bufferCap := buffer.Len() < xmasLength
+
+	return rowInRange && colInRange && bufferCap
 }
