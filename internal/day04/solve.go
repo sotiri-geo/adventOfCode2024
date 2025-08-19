@@ -11,7 +11,6 @@ const (
 
 type SearchXmas struct {
 	matrix [][]string
-	Count  int
 }
 
 func (s *SearchXmas) RightSearch(row, col int) bool {
@@ -125,4 +124,48 @@ func (s *SearchXmas) isValid(row, col int, buffer strings.Builder) bool {
 	bufferCap := buffer.Len() < xmasLength
 
 	return rowInRange && colInRange && bufferCap
+}
+
+func (s *SearchXmas) Find(row, col int) int {
+	count := 0
+
+	// 4 directional
+	if s.UpSearch(row, col) {
+		count++
+	}
+	if s.RightSearch(row, col) {
+		count++
+	}
+	if s.DownSearch(row, col) {
+		count++
+	}
+	if s.LeftSearch(row, col) {
+		count++
+	}
+	// 4 diagonal
+	if s.UpRightSearch(row, col) {
+		count++
+	}
+	if s.UpLeftSearch(row, col) {
+		count++
+	}
+	if s.DownLeftSearch(row, col) {
+		count++
+	}
+	if s.DownRightSearch(row, col) {
+		count++
+	}
+	return count
+}
+
+func Part1(puzzle [][]string) int {
+	searchXmas := SearchXmas{matrix: puzzle}
+	count := 0
+
+	for row := 0; row < len(puzzle); row++ {
+		for col := 0; col < len(puzzle[0]); col++ {
+			count += searchXmas.Find(row, col)
+		}
+	}
+	return count
 }

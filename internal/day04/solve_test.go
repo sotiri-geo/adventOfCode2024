@@ -5,7 +5,7 @@ import (
 )
 
 func TestRightSearchXmas(t *testing.T) {
-	searchXmas := SearchXmas{matrix: [][]string{{"X", "M", "A", "S", "X"}}, Count: 0}
+	searchXmas := SearchXmas{matrix: [][]string{{"X", "M", "A", "S", "X"}}}
 	rightSearchTests := []struct {
 		name   string
 		row    int
@@ -29,7 +29,7 @@ func TestRightSearchXmas(t *testing.T) {
 }
 
 func TestLeftSearchXmas(t *testing.T) {
-	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A", "M", "X"}}, Count: 0}
+	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A", "M", "X"}}}
 	leftSearchTests := []struct {
 		name string
 		row  int
@@ -53,7 +53,7 @@ func TestLeftSearchXmas(t *testing.T) {
 }
 
 func TestDownSearchXmas(t *testing.T) {
-	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A"}, {"M", "S", "A"}, {"A", "S", "A"}, {"S", "S", "A"}, {"X", "S", "A"}}, Count: 0}
+	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A"}, {"M", "S", "A"}, {"A", "S", "A"}, {"S", "S", "A"}, {"X", "S", "A"}}}
 	downSearchTests := []struct {
 		name string
 		row  int
@@ -77,7 +77,7 @@ func TestDownSearchXmas(t *testing.T) {
 }
 
 func TestUpSearchXmas(t *testing.T) {
-	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A"}, {"S", "S", "A"}, {"A", "S", "A"}, {"M", "S", "A"}, {"X", "S", "A"}}, Count: 0}
+	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A"}, {"S", "S", "A"}, {"A", "S", "A"}, {"M", "S", "A"}, {"X", "S", "A"}}}
 	upSearchTests := []struct {
 		name string
 		row  int
@@ -101,7 +101,7 @@ func TestUpSearchXmas(t *testing.T) {
 }
 
 func TestUpRightSearchXmas(t *testing.T) {
-	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A", "X"}, {"S", "S", "A", "S"}, {"A", "S", "A", "S"}, {"M", "M", "A", "S"}, {"X", "S", "A", "M"}}, Count: 0}
+	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A", "X"}, {"S", "S", "A", "S"}, {"A", "S", "A", "S"}, {"M", "M", "A", "S"}, {"X", "S", "A", "M"}}}
 	upRightSearchTests := []struct {
 		name string
 		row  int
@@ -125,7 +125,7 @@ func TestUpRightSearchXmas(t *testing.T) {
 }
 
 func TestUpLeftSearchXmas(t *testing.T) {
-	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A", "X"}, {"S", "S", "A", "S"}, {"A", "A", "A", "S"}, {"M", "M", "M", "S"}, {"X", "S", "A", "X"}}, Count: 0}
+	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A", "X"}, {"S", "S", "A", "S"}, {"A", "A", "A", "S"}, {"M", "M", "M", "S"}, {"X", "S", "A", "X"}}}
 	upLeftSearchTests := []struct {
 		name string
 		row  int
@@ -149,7 +149,7 @@ func TestUpLeftSearchXmas(t *testing.T) {
 }
 
 func TestDownRightSearchXmas(t *testing.T) {
-	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A", "X"}, {"S", "M", "A", "S"}, {"A", "A", "A", "S"}, {"M", "M", "M", "S"}, {"X", "S", "A", "X"}}, Count: 0}
+	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A", "X"}, {"S", "M", "A", "S"}, {"A", "A", "A", "S"}, {"M", "M", "M", "S"}, {"X", "S", "A", "X"}}}
 	downRightSearchTests := []struct {
 		name string
 		row  int
@@ -173,7 +173,7 @@ func TestDownRightSearchXmas(t *testing.T) {
 }
 
 func TestDownLeftSearchXmas(t *testing.T) {
-	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A", "X"}, {"S", "M", "M", "S"}, {"A", "A", "A", "S"}, {"S", "M", "M", "S"}, {"X", "S", "A", "X"}}, Count: 0}
+	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A", "X"}, {"S", "M", "M", "S"}, {"A", "A", "A", "S"}, {"S", "M", "M", "S"}, {"X", "S", "A", "X"}}}
 	downLeftSearchTests := []struct {
 		name string
 		row  int
@@ -194,4 +194,28 @@ func TestDownLeftSearchXmas(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestFindXmas(t *testing.T) {
+	t.Run("Find 2 XMAS directionally right and down from current position", func(t *testing.T) {
+		searchXmas := SearchXmas{matrix: [][]string{{"X", "M", "A", "S"}, {"M", "X", "X", "X"}, {"A", "X", "X", "X"}, {"S", "X", "X", "X"}, {"X", "X", "X", "X"}}}
+		got := searchXmas.Find(0, 0)
+		want := 2
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
+}
+
+func TestPart1(t *testing.T) {
+	t.Run("Has two XMAS in search puzzle", func(t *testing.T) {
+		puzzle := [][]string{{"X", "M", "A", "S"}, {"M", "A", "S", "X"}, {"A", "S", "X", "S"}, {"S", "X", "M", "A"}}
+		got := Part1(puzzle)
+		want := 2
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
 }
