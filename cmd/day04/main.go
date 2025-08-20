@@ -18,4 +18,5 @@ func main() {
 	inputs := strings.Split(strings.TrimSpace(string(data)), "\n")
 	puzzle := day04.To2DMatrix(inputs)
 	fmt.Println("Part 1:", day04.Part1(puzzle))
+	fmt.Println("Part 2:", day04.Part2(puzzle))
 }
