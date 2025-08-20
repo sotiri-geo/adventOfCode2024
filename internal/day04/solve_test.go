@@ -243,3 +243,67 @@ func TestPart1(t *testing.T) {
 		}
 	})
 }
+
+func TestForwardMas(t *testing.T) {
+	t.Run("found MAS", func(t *testing.T) {
+		searchMas := SearchMas{matrix: [][]string{{"X", "M", "S"}, {"X", "A", "S"}, {"M", "M", "S"}}}
+		got := searchMas.HasForward(1, 1)
+		want := true
+
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("cannot find MAS", func(t *testing.T) {
+		searchMas := SearchMas{matrix: [][]string{{"X", "M", "X"}, {"X", "A", "S"}, {"M", "M", "S"}}}
+		got := searchMas.HasForward(1, 1)
+		want := false
+
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("out of bounds", func(t *testing.T) {
+		searchMas := SearchMas{matrix: [][]string{{"X", "M", "X"}, {"X", "A", "S"}, {"M", "M", "S"}}}
+		got := searchMas.HasForward(0, 0)
+		want := false
+
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+}
+
+func TestBackwardMas(t *testing.T) {
+	t.Run("found MAS", func(t *testing.T) {
+		searchMas := SearchMas{matrix: [][]string{{"M", "M", "X"}, {"X", "A", "S"}, {"M", "M", "S"}}}
+		got := searchMas.HasBackward(1, 1)
+		want := true
+
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("cannot find MAS", func(t *testing.T) {
+		searchMas := SearchMas{matrix: [][]string{{"X", "M", "X"}, {"X", "A", "S"}, {"M", "M", "S"}}}
+		got := searchMas.HasBackward(1, 1)
+		want := false
+
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("out of bounds", func(t *testing.T) {
+		searchMas := SearchMas{matrix: [][]string{{"X", "M", "X"}, {"X", "A", "S"}, {"M", "M", "S"}}}
+		got := searchMas.HasBackward(0, 0)
+		want := false
+
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+}

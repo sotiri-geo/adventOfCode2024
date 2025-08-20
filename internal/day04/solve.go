@@ -205,3 +205,53 @@ func To2DMatrix(input []string) [][]string {
 	}
 	return output
 }
+
+// Part 2
+
+type SearchMas struct {
+	matrix [][]string
+}
+
+func (s *SearchMas) HasForward(row, col int) bool {
+	current := s.matrix[row][col]
+
+	if current != "A" {
+		return false
+	}
+	// Check boundary left down
+	if !s.isValid(row+1, col-1) {
+		return false
+	}
+	// Check boundary top right
+	if !s.isValid(row-1, col+1) {
+		return false
+	}
+
+	return s.matrix[row+1][col-1] == "M" && s.matrix[row-1][col+1] == "S"
+}
+
+func (s *SearchMas) HasBackward(row, col int) bool {
+	current := s.matrix[row][col]
+
+	if current != "A" {
+		return false
+	}
+	// Check boundary left up
+	if !s.isValid(row-1, col-1) {
+		return false
+	}
+	// Check boundary bottom right
+	if !s.isValid(row+1, col+1) {
+		return false
+	}
+
+	return s.matrix[row-1][col-1] == "M" && s.matrix[row+1][col+1] == "S"
+
+}
+
+func (s *SearchMas) isValid(row, col int) bool {
+	rowInRange := row >= 0 && row < len(s.matrix)
+	colInRange := col >= 0 && col < len(s.matrix[0])
+
+	return rowInRange && colInRange
+}
