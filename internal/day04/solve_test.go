@@ -29,20 +29,21 @@ func TestRightSearchXmas(t *testing.T) {
 }
 
 func TestLeftSearchXmas(t *testing.T) {
-	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A", "M", "X"}}}
 	leftSearchTests := []struct {
-		name string
-		row  int
-		col  int
-		want bool
+		name   string
+		row    int
+		col    int
+		matrix [][]string
+		want   bool
 	}{
-		{name: "Found XMAS", row: 0, col: 4, want: true},
-		{name: "Cannot find XMAS", row: 0, col: 3, want: false},
-		{name: "Out of bounds", row: 0, col: 2, want: false},
+		{name: "Found XMAS", row: 0, col: 3, matrix: [][]string{{"S", "A", "M", "X"}}, want: true},
+		{name: "Cannot find XMAS", row: 0, col: 2, matrix: [][]string{{"S", "A", "M", "X", "X"}}, want: false},
+		{name: "Out of bounds", row: 0, col: 2, matrix: [][]string{{"S", "S", "A", "M", "X"}}, want: false},
 	}
 
 	for _, tt := range leftSearchTests {
 		t.Run(tt.name, func(t *testing.T) {
+			searchXmas := SearchXmas{matrix: tt.matrix}
 			got := searchXmas.LeftSearch(tt.row, tt.col)
 
 			if got != tt.want {
@@ -77,20 +78,21 @@ func TestDownSearchXmas(t *testing.T) {
 }
 
 func TestUpSearchXmas(t *testing.T) {
-	searchXmas := SearchXmas{matrix: [][]string{{"X", "S", "A"}, {"S", "S", "A"}, {"A", "S", "A"}, {"M", "S", "A"}, {"X", "S", "A"}}}
 	upSearchTests := []struct {
-		name string
-		row  int
-		col  int
-		want bool
+		name   string
+		row    int
+		col    int
+		matrix [][]string
+		want   bool
 	}{
-		{name: "Found XMAS", row: 4, col: 0, want: true},
-		{name: "Cannot find XMAS", row: 3, col: 0, want: false},
-		{name: "Out of bounds", row: 2, col: 0, want: false},
+		{name: "Found XMAS", row: 3, col: 0, matrix: [][]string{{"S"}, {"A"}, {"M"}, {"X"}}, want: true},
+		{name: "Cannot find XMAS", row: 3, col: 0, matrix: [][]string{{"A"}, {"S"}, {"A"}, {"M"}, {"X"}}, want: false},
+		{name: "Out of bounds", row: 2, col: 0, matrix: [][]string{{"S"}, {"A"}, {"M"}, {"X"}}, want: false},
 	}
 
 	for _, tt := range upSearchTests {
 		t.Run(tt.name, func(t *testing.T) {
+			searchXmas := SearchXmas{matrix: tt.matrix}
 			got := searchXmas.UpSearch(tt.row, tt.col)
 
 			if got != tt.want {

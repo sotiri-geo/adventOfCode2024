@@ -31,7 +31,7 @@ func (s *SearchXmas) LeftSearch(row, col int) bool {
 	buffer.Grow(xmasLength)
 	lowerBound := max(0, col-xmasLength)
 
-	for i := col; i > lowerBound; i-- {
+	for i := col; i >= lowerBound; i-- {
 		buffer.WriteString(s.matrix[row][i])
 	}
 
@@ -55,9 +55,9 @@ func (s *SearchXmas) DownSearch(row, col int) bool {
 func (s *SearchXmas) UpSearch(row, col int) bool {
 	var buffer strings.Builder
 	buffer.Grow(xmasLength)
-	upperBound := max(row-xmasLength, 0)
+	lowerBound := max(row-xmasLength, 0)
 
-	for i := row; i > upperBound; i-- {
+	for i := row; i >= lowerBound; i-- {
 		buffer.WriteString(s.matrix[i][col])
 	}
 
@@ -81,6 +81,7 @@ func (s *SearchXmas) UpRightSearch(row, col int) bool {
 
 func (s *SearchXmas) UpLeftSearch(row, col int) bool {
 	var buffer strings.Builder
+	buffer.Grow(xmasLength)
 
 	for s.isValid(row, col, buffer) {
 		buffer.WriteString(s.matrix[row][col])
@@ -94,6 +95,7 @@ func (s *SearchXmas) UpLeftSearch(row, col int) bool {
 
 func (s *SearchXmas) DownRightSearch(row, col int) bool {
 	var buffer strings.Builder
+	buffer.Grow(xmasLength)
 
 	for s.isValid(row, col, buffer) {
 		buffer.WriteString(s.matrix[row][col])
@@ -107,6 +109,7 @@ func (s *SearchXmas) DownRightSearch(row, col int) bool {
 
 func (s *SearchXmas) DownLeftSearch(row, col int) bool {
 	var buffer strings.Builder
+	buffer.Grow(xmasLength)
 
 	for s.isValid(row, col, buffer) {
 		buffer.WriteString(s.matrix[row][col])
