@@ -255,6 +255,16 @@ func TestForwardMas(t *testing.T) {
 		}
 	})
 
+	t.Run("found MAS reverse", func(t *testing.T) {
+		searchMas := SearchMas{matrix: [][]string{{"X", "M", "M"}, {"X", "A", "S"}, {"S", "M", "S"}}}
+		got := searchMas.HasForward(1, 1)
+		want := true
+
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
 	t.Run("cannot find MAS", func(t *testing.T) {
 		searchMas := SearchMas{matrix: [][]string{{"X", "M", "X"}, {"X", "A", "S"}, {"M", "M", "S"}}}
 		got := searchMas.HasForward(1, 1)
@@ -287,6 +297,16 @@ func TestBackwardMas(t *testing.T) {
 		}
 	})
 
+	t.Run("found MAS reverse", func(t *testing.T) {
+		searchMas := SearchMas{matrix: [][]string{{"S", "M", "X"}, {"X", "A", "S"}, {"M", "M", "M"}}}
+		got := searchMas.HasBackward(1, 1)
+		want := true
+
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
 	t.Run("cannot find MAS", func(t *testing.T) {
 		searchMas := SearchMas{matrix: [][]string{{"X", "M", "X"}, {"X", "A", "S"}, {"M", "M", "S"}}}
 		got := searchMas.HasBackward(1, 1)
@@ -304,6 +324,95 @@ func TestBackwardMas(t *testing.T) {
 
 		if got != want {
 			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+}
+
+func TestFindMas(t *testing.T) {
+
+	t.Run("has forwards and backwards", func(t *testing.T) {
+		searchMas := SearchMas{matrix: [][]string{{"M", "X", "S"}, {"M", "A", "S"}, {"M", "X", "S"}}}
+
+		got := searchMas.Find(1, 1)
+		want := 1
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
+
+	t.Run("has only forwards", func(t *testing.T) {
+		searchMas := SearchMas{matrix: [][]string{{"M", "X", "S"}, {"M", "A", "S"}, {"M", "X", "X"}}}
+
+		got := searchMas.Find(1, 1)
+		want := 0
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
+
+	t.Run("has only backwards", func(t *testing.T) {
+		searchMas := SearchMas{matrix: [][]string{{"M", "X", "X"}, {"M", "A", "S"}, {"M", "X", "S"}}}
+
+		got := searchMas.Find(1, 1)
+		want := 0
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
+
+	t.Run("has MAS from input", func(t *testing.T) {
+		input := []string{
+			"SMS",
+			"MAM",
+			"MXM",
+		}
+		puzzle := To2DMatrix(input)
+		searchMas := SearchMas{matrix: puzzle}
+
+		got := searchMas.Find(1, 1)
+		want := 1
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+
+	})
+}
+
+func TestPart2(t *testing.T) {
+	t.Run("has 1 MAS", func(t *testing.T) {
+		puzzle := [][]string{{"M", "X", "S"}, {"M", "A", "S"}, {"M", "X", "S"}}
+		got := Part2(puzzle)
+		want := 1
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
+
+	t.Run("has 4 MAS", func(t *testing.T) {
+		input := []string{
+			"MMMSXXMASM",
+			"MSAMXMSMSA",
+			"AMXSXMAAMM",
+			"MSAMASMSMX",
+			"XMASAMXAMM",
+			"XXAMMXXAMA",
+			"SMSMSASXSS",
+			"SAXAMASAAA",
+			"MAMMMXMMMM",
+			"MXMXAXMASX",
+		}
+		puzzle := To2DMatrix(input)
+
+		got := Part2(puzzle)
+		want := 9
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
 		}
 	})
 }

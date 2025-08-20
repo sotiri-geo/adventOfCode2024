@@ -9,6 +9,11 @@ const (
 	xmasLength = len(XMAS)
 )
 
+// All we need to implement an interface in Go is just implement all methods on interface
+type Search interface {
+	Find() int
+}
+
 type SearchXmas struct {
 	matrix [][]string
 }
@@ -219,7 +224,10 @@ func (s *SearchMas) HasForward(row, col int) bool {
 		return false
 	}
 
-	return s.hasCharacterM(row+1, col-1) && s.hasCharacterS(row-1, col+1)
+	straight := s.hasCharacterM(row+1, col-1) && s.hasCharacterS(row-1, col+1)
+	reverse := s.hasCharacterS(row+1, col-1) && s.hasCharacterM(row-1, col+1)
+
+	return straight || reverse
 }
 
 func (s *SearchMas) HasBackward(row, col int) bool {
@@ -228,7 +236,11 @@ func (s *SearchMas) HasBackward(row, col int) bool {
 	if current != "A" {
 		return false
 	}
-	return s.hasCharacterM(row-1, col-1) && s.hasCharacterS(row+1, col+1)
+
+	straight := s.hasCharacterM(row-1, col-1) && s.hasCharacterS(row+1, col+1)
+	reverse := s.hasCharacterS(row-1, col-1) && s.hasCharacterM(row+1, col+1)
+
+	return straight || reverse
 }
 
 func (s *SearchMas) isValid(row, col int) bool {
@@ -244,4 +256,24 @@ func (s *SearchMas) hasCharacterS(row, col int) bool {
 
 func (s *SearchMas) hasCharacterM(row, col int) bool {
 	return s.isValid(row, col) && s.matrix[row][col] == "M"
+}
+
+func (s *SearchMas) Find(row, col int) int {
+	if s.HasForward(row, col) && s.HasBackward(row, col) {
+		return 1
+	}
+	return 0
+}
+
+func Part2(puzzle [][]string) int {
+	searchMas := SearchMas{matrix: puzzle}
+	count := 0
+
+	for row := 0; row < len(puzzle); row++ {
+		for col := 0; col < len(puzzle[0]); col++ {
+			result := searchMas.Find(row, col)
+			count += result
+		}
+	}
+	return count
 }
