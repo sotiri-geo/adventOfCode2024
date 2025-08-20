@@ -218,16 +218,8 @@ func (s *SearchMas) HasForward(row, col int) bool {
 	if current != "A" {
 		return false
 	}
-	// Check boundary left down
-	if !s.isValid(row+1, col-1) {
-		return false
-	}
-	// Check boundary top right
-	if !s.isValid(row-1, col+1) {
-		return false
-	}
 
-	return s.matrix[row+1][col-1] == "M" && s.matrix[row-1][col+1] == "S"
+	return s.hasCharacterM(row+1, col-1) && s.hasCharacterS(row-1, col+1)
 }
 
 func (s *SearchMas) HasBackward(row, col int) bool {
@@ -236,17 +228,7 @@ func (s *SearchMas) HasBackward(row, col int) bool {
 	if current != "A" {
 		return false
 	}
-	// Check boundary left up
-	if !s.isValid(row-1, col-1) {
-		return false
-	}
-	// Check boundary bottom right
-	if !s.isValid(row+1, col+1) {
-		return false
-	}
-
-	return s.matrix[row-1][col-1] == "M" && s.matrix[row+1][col+1] == "S"
-
+	return s.hasCharacterM(row-1, col-1) && s.hasCharacterS(row+1, col+1)
 }
 
 func (s *SearchMas) isValid(row, col int) bool {
@@ -254,4 +236,12 @@ func (s *SearchMas) isValid(row, col int) bool {
 	colInRange := col >= 0 && col < len(s.matrix[0])
 
 	return rowInRange && colInRange
+}
+
+func (s *SearchMas) hasCharacterS(row, col int) bool {
+	return s.isValid(row, col) && s.matrix[row][col] == "S"
+}
+
+func (s *SearchMas) hasCharacterM(row, col int) bool {
+	return s.isValid(row, col) && s.matrix[row][col] == "M"
 }
