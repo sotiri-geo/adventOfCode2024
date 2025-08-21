@@ -20,7 +20,7 @@ func main() {
 	}
 
 	predecessor := day05.NewPredecessor(strings.Split(strings.TrimSpace(string(order)), "\n"))
-	pageUpdates := day05.ParsedUpdates(strings.Split(strings.TrimSpace(string(updates)), "\n"))
+	pageUpdates := day05.ParseUpdates(strings.Split(strings.TrimSpace(string(updates)), "\n"))
 
 	fmt.Println("Part 1:", day05.Part1(predecessor, pageUpdates))
 }

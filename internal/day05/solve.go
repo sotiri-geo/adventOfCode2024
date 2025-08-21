@@ -10,7 +10,11 @@ import (
 	"github.com/sotiri-geo/adventOfCode2024/internal/day01"
 )
 
-var ErrNoPageNumber = errors.New("no page number recorded as key.")
+var (
+	ErrNoPageNumber              = errors.New("no page number recorded as key.")
+	ErrMultipleZeroInDegreePages = errors.New("found multiple zero indegree pages")
+	ErrNoZeroInDegreePages       = errors.New("Cannot find zero indegree page")
+)
 
 // Key is a page, values is an array of predecessor pages
 type Predecessor map[int][]int
@@ -86,17 +90,60 @@ func Part1(predecessor Predecessor, pageUpdates [][]int) int {
 // Part 2
 
 type AdjacencyList map[int][]int
+type InDegree map[int]int
 
+func parsePageOrder(direction string) (from int, to int) {
+	f, t, _ := strings.Cut(direction, "|")
+	from, _ = strconv.Atoi(f)
+	to, _ = strconv.Atoi(t)
+	return from, to
+}
+
+func containsPages(pages []int, from, to int) bool {
+	return slices.Contains(pages, from) && slices.Contains(pages, to)
+}
 func NewAdjacencyList(orderingRule []string, pages []int) AdjacencyList {
 	dependencies := AdjacencyList{}
 
 	for _, order := range orderingRule {
-		from, to, _ := strings.Cut(order, "|")
-		parseFrom, _ := strconv.Atoi(from)
-		parseTo, _ := strconv.Atoi(to)
-		if slices.Contains(pages, parseFrom) {
-			dependencies[parseFrom] = append(dependencies[parseFrom], parseTo)
+		from, to := parsePageOrder(order)
+		if containsPages(pages, from, to) {
+			dependencies[from] = append(dependencies[from], to)
 		}
 	}
 	return dependencies
+}
+
+func NewInDegree(orderingRule []string, pages []int) InDegree {
+	inDegree := InDegree{}
+
+	for _, order := range orderingRule {
+		from, to := parsePageOrder(order)
+		// Only consider indegree from nodes in pages
+		if containsPages(pages, from, to) {
+			inDegree[to]++
+		}
+	}
+	return inDegree
+}
+
+func (i InDegree) FirstZeroInDegree(pages []int) (int, error) {
+	// Should prune pages as we select them in topological sort
+	found := make([]int, 0, len(pages))
+	for _, page := range pages {
+		_, ok := i[page]
+		if !ok {
+			found = append(found, page)
+		}
+	}
+	if len(found) > 1 {
+		// Not unique
+		return 0, ErrMultipleZeroInDegreePages
+	}
+
+	if len(found) == 1 {
+		return found[0], nil
+	}
+
+	return 0, ErrNoZeroInDegreePages
 }

@@ -159,7 +159,7 @@ func TestAdjacencyList(t *testing.T) {
 		want          AdjacencyList
 	}{
 		{name: "ordering rule pages subset of page updates", pages: []int{47, 53, 97, 13}, orderingRules: []string{"47|53", "97|13"}, want: AdjacencyList{47: []int{53}, 97: []int{13}}},
-		{name: "ordering rule pages not a subset of page updates", pages: []int{47, 53, 97, 13}, orderingRules: []string{"47|53", "97|13", "67|18"}, want: AdjacencyList{47: []int{53}, 97: []int{13}}},
+		{name: "ordering rule pages not a subset of page updates", pages: []int{47, 53, 97, 13}, orderingRules: []string{"47|53", "97|13", "67|18", "47|93"}, want: AdjacencyList{47: []int{53}, 97: []int{13}}},
 	}
 
 	for _, tt := range cases {
@@ -170,5 +170,58 @@ func TestAdjacencyList(t *testing.T) {
 				t.Errorf("got %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestInDegree(t *testing.T) {
+	t.Run("init indegree map of pages", func(t *testing.T) {
+		pages := []int{47, 53, 97, 13, 20}
+		orderingRules := []string{"47|53", "97|13"}
+		got := NewInDegree(orderingRules, pages)
+		want := InDegree{53: 1, 13: 1}
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("find zero indegree page", func(t *testing.T) {
+		pages := []int{53, 47, 13}
+		// Zero degree nodes are not stored, search via pages to see missing node from InDegree
+		inDegree := InDegree{53: 1, 13: 1}
+		got, _ := inDegree.FirstZeroInDegree(pages)
+		want := 47
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
+
+	t.Run("multiple zero in degree pages", func(t *testing.T) {
+		pages := []int{53, 47, 13, 11}
+		// Zero degree nodes are not stored, search via pages to see missing node from InDegree
+		inDegree := InDegree{53: 1, 13: 1}
+		_, err := inDegree.FirstZeroInDegree(pages)
+
+		assertError(t, err, ErrMultipleZeroInDegreePages)
+	})
+
+	t.Run("no zero in degree pages", func(t *testing.T) {
+		pages := []int{53, 13}
+		// Zero degree nodes are not stored, search via pages to see missing node from InDegree
+		inDegree := InDegree{53: 1, 13: 1}
+		_, err := inDegree.FirstZeroInDegree(pages)
+
+		assertError(t, err, ErrNoZeroInDegreePages)
+	})
+}
+
+func assertError(t testing.TB, got, want error) {
+	t.Helper()
+	if got == nil {
+		t.Fatal("did not get an error but wanted one")
+	}
+	if got != want {
+		t.Errorf("got %v, want %v", got, want)
 	}
 }
