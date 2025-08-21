@@ -33,7 +33,7 @@ type Row struct {
 	Right int
 }
 
-func toInts(strs []string) []int {
+func ToInts(strs []string) []int {
 	// good to use make(type, n) when you know the array is of fixed size n
 	// no extra allocation of memory as we append to array
 	nums := make([]int, len(strs))
@@ -49,7 +49,7 @@ func toInts(strs []string) []int {
 }
 
 func split(ids string) (Row, error) {
-	idValues := toInts(strings.Split(ids, "   "))
+	idValues := ToInts(strings.Split(ids, "   "))
 
 	if len(idValues) != 2 {
 		return Row{}, errors.New("Can not find two ids in a row.")

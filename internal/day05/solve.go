@@ -6,6 +6,8 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+
+	"github.com/sotiri-geo/adventOfCode2024/internal/day01"
 )
 
 var ErrNoPageNumber = errors.New("no page number recorded as key.")
@@ -57,6 +59,15 @@ func NewPredecessor(orderingRules []string) Predecessor {
 		pre.Add(rule)
 	}
 	return pre
+}
+
+func ParsedUpdates(updates []string) [][]int {
+	parsed := make([][]int, len(updates))
+
+	for idx, row := range updates {
+		parsed[idx] = day01.ToInts(strings.Split(row, ","))
+	}
+	return parsed
 }
 
 func Part1(predecessor Predecessor, pageUpdates [][]int) int {

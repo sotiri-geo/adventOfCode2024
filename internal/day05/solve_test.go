@@ -126,6 +126,18 @@ func TestMiddleNumber(t *testing.T) {
 	})
 }
 
+func TestParseUpdates(t *testing.T) {
+	t.Run("parse an array of strings to 2D array of ints", func(t *testing.T) {
+		input := []string{"1,2,3"}
+		got := ParsedUpdates(input)
+		want := [][]int{{1, 2, 3}}
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+}
+
 func TestPart1(t *testing.T) {
 	t.Run("Two page updates correct", func(t *testing.T) {
 		pre := Predecessor{5: []int{1, 2, 3, 4}, 4: []int{1, 2, 3}, 3: []int{1, 2}, 2: []int{1}}
