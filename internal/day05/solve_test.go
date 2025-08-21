@@ -129,7 +129,7 @@ func TestMiddleNumber(t *testing.T) {
 func TestParseUpdates(t *testing.T) {
 	t.Run("parse an array of strings to 2D array of ints", func(t *testing.T) {
 		input := []string{"1,2,3"}
-		got := ParsedUpdates(input)
+		got := ParseUpdates(input)
 		want := [][]int{{1, 2, 3}}
 
 		if !reflect.DeepEqual(got, want) {
@@ -149,4 +149,26 @@ func TestPart1(t *testing.T) {
 			t.Errorf("got %d, want %d", got, want)
 		}
 	})
+}
+
+func TestAdjacencyList(t *testing.T) {
+	cases := []struct {
+		name          string
+		pages         []int
+		orderingRules []string
+		want          AdjacencyList
+	}{
+		{name: "ordering rule pages subset of page updates", pages: []int{47, 53, 97, 13}, orderingRules: []string{"47|53", "97|13"}, want: AdjacencyList{47: []int{53}, 97: []int{13}}},
+		{name: "ordering rule pages not a subset of page updates", pages: []int{47, 53, 97, 13}, orderingRules: []string{"47|53", "97|13", "67|18"}, want: AdjacencyList{47: []int{53}, 97: []int{13}}},
+	}
+
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			got := NewAdjacencyList(tt.orderingRules, tt.pages)
+
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("got %v, want %v", got, tt.want)
+			}
+		})
+	}
 }

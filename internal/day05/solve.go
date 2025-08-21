@@ -61,7 +61,7 @@ func NewPredecessor(orderingRules []string) Predecessor {
 	return pre
 }
 
-func ParsedUpdates(updates []string) [][]int {
+func ParseUpdates(updates []string) [][]int {
 	parsed := make([][]int, len(updates))
 
 	for idx, row := range updates {
@@ -81,4 +81,22 @@ func Part1(predecessor Predecessor, pageUpdates [][]int) int {
 		}
 	}
 	return total
+}
+
+// Part 2
+
+type AdjacencyList map[int][]int
+
+func NewAdjacencyList(orderingRule []string, pages []int) AdjacencyList {
+	dependencies := AdjacencyList{}
+
+	for _, order := range orderingRule {
+		from, to, _ := strings.Cut(order, "|")
+		parseFrom, _ := strconv.Atoi(from)
+		parseTo, _ := strconv.Atoi(to)
+		if slices.Contains(pages, parseFrom) {
+			dependencies[parseFrom] = append(dependencies[parseFrom], parseTo)
+		}
+	}
+	return dependencies
 }
