@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/sotiri-geo/adventOfCode2024/internal/day05"
 )
 
 func main() {
@@ -17,9 +19,8 @@ func main() {
 		panic(errUpdates)
 	}
 
-	parsedOrder := strings.Split(string(order), "\n")
-	parsedUpdates := strings.Split(string(updates), "\n")
+	predecessor := day05.NewPredecessor(strings.Split(strings.TrimSpace(string(order)), "\n"))
+	pageUpdates := day05.ParsedUpdates(strings.Split(strings.TrimSpace(string(updates)), "\n"))
 
-	fmt.Println(parsedOrder)
-	fmt.Println(parsedUpdates)
+	fmt.Println("Part 1:", day05.Part1(predecessor, pageUpdates))
 }
