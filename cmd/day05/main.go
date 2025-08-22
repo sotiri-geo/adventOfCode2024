@@ -19,8 +19,11 @@ func main() {
 		panic(errUpdates)
 	}
 
-	predecessor := day05.NewPredecessor(strings.Split(strings.TrimSpace(string(order)), "\n"))
+	edges := strings.Split(strings.TrimSpace(string(order)), "\n")
+	predecessor := day05.NewPredecessor(edges)
 	pageUpdates := day05.ParseUpdates(strings.Split(strings.TrimSpace(string(updates)), "\n"))
 
 	fmt.Println("Part 1:", day05.Part1(predecessor, pageUpdates))
+	part2, _ := day05.Part2(pageUpdates, edges)
+	fmt.Println("Part 2:", part2)
 }
