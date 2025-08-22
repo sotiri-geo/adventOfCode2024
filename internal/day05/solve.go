@@ -14,6 +14,7 @@ var (
 	ErrNoPageNumber              = errors.New("no page number recorded as key.")
 	ErrMultipleZeroInDegreePages = errors.New("found multiple zero indegree pages")
 	ErrNoZeroInDegreePages       = errors.New("Cannot find zero indegree page")
+	ErrCycleFoundInPages         = errors.New("Found a cycle, cannot apply topological sort to graph")
 )
 
 // Key is a page, values is an array of predecessor pages
@@ -112,4 +113,49 @@ func (g *Graph) AddEdge(from, to int) {
 
 	g.Adj[from] = append(g.Adj[from], to)
 	g.Indegree[to]++
+}
+
+func (g *Graph) ZeroIndegreePages() []int {
+	var zeroIndegrees []int
+
+	for page, indegree := range g.Indegree {
+		if indegree == 0 {
+			zeroIndegrees = append(zeroIndegrees, page)
+		}
+	}
+
+	return zeroIndegrees
+}
+
+func (g *Graph) ProcessPage(page int) []int {
+	newIndegree := []int{}
+
+	// for neighbour of page, reduce indegree by 1
+	for _, nei := range g.Adj[page] {
+		g.Indegree[nei]--
+		if g.Indegree[nei] == 0 {
+			newIndegree = append(newIndegree, nei)
+		}
+	}
+	return newIndegree
+}
+
+func (g *Graph) TopSort() ([]int, error) {
+	sortedPages := []int{}
+	zeroDegreeQueue := g.ZeroIndegreePages()
+
+	for len(zeroDegreeQueue) > 0 {
+		currPage := zeroDegreeQueue[0]
+		zeroDegreeQueue = zeroDegreeQueue[1:] // pop left
+
+		// explore zero degree neighbours after processing curr page
+		zeroDegreeQueue = append(zeroDegreeQueue, g.ProcessPage(currPage)...)
+		sortedPages = append(sortedPages, currPage)
+	}
+
+	if len(sortedPages) == len(g.Indegree) {
+		return sortedPages, nil
+	}
+
+	return nil, ErrCycleFoundInPages
 }

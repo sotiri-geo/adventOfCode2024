@@ -2,6 +2,7 @@ package day05
 
 import (
 	"reflect"
+	"slices"
 	"testing"
 )
 
@@ -169,4 +170,70 @@ func TestGraph(t *testing.T) {
 			t.Errorf("Indegree: got %v, want %v", graph.Indegree, wantIndegree)
 		}
 	})
+
+	t.Run("extract 0 in degree pages", func(t *testing.T) {
+		graph := Graph{
+			Adj:      map[int][]int{1: {2}},
+			Indegree: map[int]int{2: 1, 1: 0},
+		}
+
+		got := graph.ZeroIndegreePages()
+		want := []int{1}
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("process a zero indegree page", func(t *testing.T) {
+		// Find all new zero indegree pages to add
+		graph := Graph{
+			Adj:      map[int][]int{1: {2}},
+			Indegree: map[int]int{2: 1, 1: 0},
+		}
+
+		got := graph.ProcessPage(1)
+		want := []int{2}
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("sort by page dependencies by top sort", func(t *testing.T) {
+		graph := Graph{
+			Adj:      map[int][]int{1: {2}},
+			Indegree: map[int]int{2: 1, 1: 0},
+		}
+
+		got, _ := graph.TopSort()
+		want := []int{1, 2}
+
+		if !slices.Equal(got, want) {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("found cycle in page dependencies", func(t *testing.T) {
+		graph := Graph{
+			Adj:      map[int][]int{1: {2}, 2: {1}},
+			Indegree: map[int]int{2: 1, 1: 1},
+		}
+
+		_, err := graph.TopSort()
+
+		assertError(t, err, ErrCycleFoundInPages)
+	})
+}
+
+func assertError(t testing.TB, got, want error) {
+	t.Helper()
+	if got == nil {
+		t.Fatal("expected error but did not get one")
+	}
+
+	// compare the underlining error type
+	if got != want {
+		t.Errorf("got %s, want %s", got, want)
+	}
 }
