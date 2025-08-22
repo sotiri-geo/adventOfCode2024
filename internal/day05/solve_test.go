@@ -151,77 +151,22 @@ func TestPart1(t *testing.T) {
 	})
 }
 
-func TestAdjacencyList(t *testing.T) {
-	cases := []struct {
-		name          string
-		pages         []int
-		orderingRules []string
-		want          AdjacencyList
-	}{
-		{name: "ordering rule pages subset of page updates", pages: []int{47, 53, 97, 13}, orderingRules: []string{"47|53", "97|13"}, want: AdjacencyList{47: []int{53}, 97: []int{13}}},
-		{name: "ordering rule pages not a subset of page updates", pages: []int{47, 53, 97, 13}, orderingRules: []string{"47|53", "97|13", "67|18", "47|93"}, want: AdjacencyList{47: []int{53}, 97: []int{13}}},
-	}
+func TestGraph(t *testing.T) {
+	t.Run("add edge to graph updates adjacency and indegree", func(t *testing.T) {
+		pages := []int{1, 2, 3}
+		graph := NewGraph(pages)
 
-	for _, tt := range cases {
-		t.Run(tt.name, func(t *testing.T) {
-			got := NewAdjacencyList(tt.orderingRules, tt.pages)
+		graph.AddEdge(1, 2)
 
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("got %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+		wantAdj := map[int][]int{1: {2}}
+		wantIndegree := map[int]int{1: 0, 2: 1, 3: 0}
 
-func TestInDegree(t *testing.T) {
-	t.Run("init indegree map of pages", func(t *testing.T) {
-		pages := []int{47, 53, 97, 13, 20}
-		orderingRules := []string{"47|53", "97|13"}
-		got := NewInDegree(orderingRules, pages)
-		want := InDegree{53: 1, 13: 1}
+		if !reflect.DeepEqual(graph.Adj, wantAdj) {
+			t.Errorf("Adj: got %v, want %v", graph.Adj, wantAdj)
+		}
 
-		if !reflect.DeepEqual(got, want) {
-			t.Errorf("got %v, want %v", got, want)
+		if !reflect.DeepEqual(graph.Indegree, wantIndegree) {
+			t.Errorf("Indegree: got %v, want %v", graph.Indegree, wantIndegree)
 		}
 	})
-
-	t.Run("find zero indegree page", func(t *testing.T) {
-		pages := []int{53, 47, 13}
-		// Zero degree nodes are not stored, search via pages to see missing node from InDegree
-		inDegree := InDegree{53: 1, 13: 1}
-		got, _ := inDegree.FirstZeroInDegree(pages)
-		want := 47
-
-		if got != want {
-			t.Errorf("got %d, want %d", got, want)
-		}
-	})
-
-	t.Run("multiple zero in degree pages", func(t *testing.T) {
-		pages := []int{53, 47, 13, 11}
-		// Zero degree nodes are not stored, search via pages to see missing node from InDegree
-		inDegree := InDegree{53: 1, 13: 1}
-		_, err := inDegree.FirstZeroInDegree(pages)
-
-		assertError(t, err, ErrMultipleZeroInDegreePages)
-	})
-
-	t.Run("no zero in degree pages", func(t *testing.T) {
-		pages := []int{53, 13}
-		// Zero degree nodes are not stored, search via pages to see missing node from InDegree
-		inDegree := InDegree{53: 1, 13: 1}
-		_, err := inDegree.FirstZeroInDegree(pages)
-
-		assertError(t, err, ErrNoZeroInDegreePages)
-	})
-}
-
-func assertError(t testing.TB, got, want error) {
-	t.Helper()
-	if got == nil {
-		t.Fatal("did not get an error but wanted one")
-	}
-	if got != want {
-		t.Errorf("got %v, want %v", got, want)
-	}
 }

@@ -88,62 +88,28 @@ func Part1(predecessor Predecessor, pageUpdates [][]int) int {
 }
 
 // Part 2
-
-type AdjacencyList map[int][]int
-type InDegree map[int]int
-
-func parsePageOrder(direction string) (from int, to int) {
-	f, t, _ := strings.Cut(direction, "|")
-	from, _ = strconv.Atoi(f)
-	to, _ = strconv.Atoi(t)
-	return from, to
+type Graph struct {
+	Adj      map[int][]int
+	Indegree map[int]int
 }
 
-func containsPages(pages []int, from, to int) bool {
-	return slices.Contains(pages, from) && slices.Contains(pages, to)
-}
-func NewAdjacencyList(orderingRule []string, pages []int) AdjacencyList {
-	dependencies := AdjacencyList{}
-
-	for _, order := range orderingRule {
-		from, to := parsePageOrder(order)
-		if containsPages(pages, from, to) {
-			dependencies[from] = append(dependencies[from], to)
-		}
+func NewGraph(pages []int) *Graph {
+	// init a new graph with pages acting as nodes
+	g := &Graph{
+		Adj:      make(map[int][]int),
+		Indegree: make(map[int]int),
 	}
-	return dependencies
-}
 
-func NewInDegree(orderingRule []string, pages []int) InDegree {
-	inDegree := InDegree{}
-
-	for _, order := range orderingRule {
-		from, to := parsePageOrder(order)
-		// Only consider indegree from nodes in pages
-		if containsPages(pages, from, to) {
-			inDegree[to]++
-		}
-	}
-	return inDegree
-}
-
-func (i InDegree) FirstZeroInDegree(pages []int) (int, error) {
-	// Should prune pages as we select them in topological sort
-	found := make([]int, 0, len(pages))
+	// default set indegree
 	for _, page := range pages {
-		_, ok := i[page]
-		if !ok {
-			found = append(found, page)
-		}
+		g.Indegree[page] = 0
 	}
-	if len(found) > 1 {
-		// Not unique
-		return 0, ErrMultipleZeroInDegreePages
-	}
+	return g
+}
 
-	if len(found) == 1 {
-		return found[0], nil
-	}
+func (g *Graph) AddEdge(from, to int) {
+	// Adds a directed edge and updates Adj, Indegree states
 
-	return 0, ErrNoZeroInDegreePages
+	g.Adj[from] = append(g.Adj[from], to)
+	g.Indegree[to]++
 }
