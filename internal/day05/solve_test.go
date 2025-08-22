@@ -226,13 +226,68 @@ func TestGraph(t *testing.T) {
 	})
 }
 
+func TestReorder(t *testing.T) {
+	t.Run("reorder array which is 1 swap from being correct", func(t *testing.T) {
+		pages := []int{2, 1}
+		edges := []string{"1|2"}
+
+		got, err := Reorder(pages, edges)
+		want := []int{1, 2}
+
+		if err != nil {
+			t.Fatal("should not fail")
+		}
+
+		if !slices.Equal(got, want) {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("reorder not possible from dependency cycle", func(t *testing.T) {
+		pages := []int{2, 1}
+		edges := []string{"1|2", "2|1"}
+
+		_, err := Reorder(pages, edges)
+
+		assertError(t, err, ErrCycleFoundInPages)
+
+	})
+}
+
+func TestPart2(t *testing.T) {
+	t.Run("reorders two page updates and returns sum of middle", func(t *testing.T) {
+		pageUpdates := [][]int{{1, 2, 3}, {3, 2, 1}, {3, 1, 4}, {1, 2, 3, 4}}
+		edges := []string{"1|2", "1|3", "1|4", "2|3", "2|4", "3|4"}
+
+		got, err := Part2(pageUpdates, edges)
+
+		want := 5
+
+		if err != nil {
+			t.Fatal("should not raise an error")
+		}
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
+
+	t.Run("found cycle in graph", func(t *testing.T) {
+		pageUpdates := [][]int{{1, 2}, {2, 1}}
+		edges := []string{"1|2", "2|1"}
+
+		_, err := Part2(pageUpdates, edges)
+
+		assertError(t, err, ErrCycleFoundInPages)
+	})
+}
+
 func assertError(t testing.TB, got, want error) {
 	t.Helper()
 	if got == nil {
 		t.Fatal("expected error but did not get one")
 	}
 
-	// compare the underlining error type
 	if got != want {
 		t.Errorf("got %s, want %s", got, want)
 	}

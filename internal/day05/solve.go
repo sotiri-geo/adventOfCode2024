@@ -159,3 +159,38 @@ func (g *Graph) TopSort() ([]int, error) {
 
 	return nil, ErrCycleFoundInPages
 }
+
+func Reorder(pages []int, edges []string) ([]int, error) {
+	graph := NewGraph(pages)
+
+	for _, edge := range edges {
+		from, to, _ := strings.Cut(edge, "|")
+		u, _ := strconv.Atoi(from)
+		v, _ := strconv.Atoi(to)
+		if slices.Contains(pages, u) && slices.Contains(pages, v) {
+			graph.AddEdge(u, v)
+		}
+	}
+	sorted, err := graph.TopSort()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return sorted, nil
+}
+
+func Part2(pageUpdates [][]int, edges []string) (int, error) {
+	total := 0
+
+	for _, pages := range pageUpdates {
+		orderedPages, err := Reorder(pages, edges)
+		if err != nil {
+			return 0, err
+		}
+		if !slices.Equal(pages, orderedPages) {
+			total += MiddleNumber(orderedPages)
+		}
+	}
+	return total, nil
+}
