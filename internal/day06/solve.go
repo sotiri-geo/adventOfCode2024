@@ -28,10 +28,11 @@ type Position struct {
 // State variables for Guard
 // row, column, direction
 type Guard struct {
-	row       int
-	column    int
-	direction Direction
-	steps     int // starts at 1
+	row          int
+	column       int
+	direction    Direction
+	steps        int  // starts at 1
+	isPatrolling bool // guard in map
 }
 
 func NewGuard(inputMap [][]string) (*Guard, error) {
@@ -46,7 +47,7 @@ func NewGuard(inputMap [][]string) (*Guard, error) {
 			object := inputMap[ridx][cidx]
 			direction, ok := directions[object]
 			if ok {
-				return &Guard{ridx, cidx, direction, 1}, nil
+				return &Guard{ridx, cidx, direction, 1, true}, nil
 			}
 		}
 	}
@@ -56,9 +57,11 @@ func NewGuard(inputMap [][]string) (*Guard, error) {
 func (g *Guard) MoveFoward(inputMap [][]string) {
 	nextPosition := g.getNextPosition()
 
-	if inputMap[nextPosition.row][nextPosition.column] == Wall {
-		// We need to rotate 90 degrees then recursively call Move forward
-		g.turn()
+	if !g.withinBoundary(nextPosition, inputMap) {
+		g.isPatrolling = false
+	} else if inputMap[nextPosition.row][nextPosition.column] == Wall {
+		// We cannot walk through a wall
+		g.turnClockwise()
 		g.MoveFoward(inputMap)
 	} else {
 		g.row = nextPosition.row
@@ -81,6 +84,13 @@ func (g *Guard) getNextPosition() Position {
 	return Position{g.row, g.column}
 }
 
-func (g *Guard) turn() {
+func (g *Guard) turnClockwise() {
 	g.direction = (g.direction + 1) % 4
+}
+
+func (g *Guard) withinBoundary(position Position, inputMap [][]string) bool {
+	rowLength := len(inputMap)
+	columnLength := len(inputMap[0])
+
+	return position.row >= 0 && position.row < rowLength && position.column >= 0 && position.column < columnLength
 }

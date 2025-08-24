@@ -11,10 +11,10 @@ func TestNewGuard(t *testing.T) {
 		InputMap [][]string
 		Want     Guard
 	}{
-		{Name: "guard facing up", InputMap: [][]string{{".", "."}, {"#", "^"}}, Want: Guard{1, 1, Up, 1}},
-		{Name: "guard facing right", InputMap: [][]string{{".", "."}, {">", "."}}, Want: Guard{1, 0, Right, 1}},
-		{Name: "guard facing down", InputMap: [][]string{{".", "v"}, {".", "."}}, Want: Guard{0, 1, Down, 1}},
-		{Name: "guard facing left", InputMap: [][]string{{".", "<"}, {".", "."}}, Want: Guard{0, 1, Left, 1}},
+		{Name: "guard facing up", InputMap: [][]string{{".", "."}, {"#", "^"}}, Want: Guard{1, 1, Up, 1, true}},
+		{Name: "guard facing right", InputMap: [][]string{{".", "."}, {">", "."}}, Want: Guard{1, 0, Right, 1, true}},
+		{Name: "guard facing down", InputMap: [][]string{{".", "v"}, {".", "."}}, Want: Guard{0, 1, Down, 1, true}},
+		{Name: "guard facing left", InputMap: [][]string{{".", "<"}, {".", "."}}, Want: Guard{0, 1, Left, 1, true}},
 	}
 
 	for _, tt := range cases {
@@ -42,9 +42,10 @@ func TestGuardMoveForward(t *testing.T) {
 		want     Guard
 		inputMap [][]string
 	}{
-		{name: "moves forward 1 step", want: Guard{row: 0, column: 1, steps: 2, direction: Up}, inputMap: [][]string{{".", "."}, {".", "^"}}},
-		{name: "facing up against wall, rotate right 90 degrees", want: Guard{row: 1, column: 1, steps: 2, direction: Right}, inputMap: [][]string{{"#", "."}, {"^", "."}}},
-		{name: "facing left against wall, rotate right 90 degrees", want: Guard{row: 0, column: 1, steps: 2, direction: Up}, inputMap: [][]string{{".", "."}, {"#", "<"}}},
+		{name: "moves forward 1 step", want: Guard{row: 0, column: 1, steps: 2, direction: Up, isPatrolling: true}, inputMap: [][]string{{".", "."}, {".", "^"}}},
+		{name: "facing up against wall, rotate right 90 degrees", want: Guard{row: 1, column: 1, steps: 2, direction: Right, isPatrolling: true}, inputMap: [][]string{{"#", "."}, {"^", "."}}},
+		{name: "facing left against wall, rotate right 90 degrees", want: Guard{row: 0, column: 1, steps: 2, direction: Up, isPatrolling: true}, inputMap: [][]string{{".", "."}, {"#", "<"}}},
+		{name: "guard leaves the map", want: Guard{row: 0, column: 0, steps: 1, direction: Up, isPatrolling: false}, inputMap: [][]string{{"^", "."}, {".", "."}}},
 	}
 
 	for _, tt := range cases {
