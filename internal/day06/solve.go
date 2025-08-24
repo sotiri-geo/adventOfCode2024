@@ -21,9 +21,10 @@ const (
 // State variables for Guard
 // row, column, direction
 type Guard struct {
-	row       int
-	column    int
-	direction Direction
+	row           int
+	column        int
+	direction     Direction
+	positionCount int
 }
 
 func NewGuard(inputMap [][]string) (*Guard, error) {
@@ -38,7 +39,7 @@ func NewGuard(inputMap [][]string) (*Guard, error) {
 			object := inputMap[ridx][cidx]
 			direction, ok := directions[object]
 			if ok {
-				return &Guard{ridx, cidx, direction}, nil
+				return &Guard{ridx, cidx, direction, 1}, nil
 			}
 		}
 	}
