@@ -21,8 +21,9 @@ const (
 const Wall = "#"
 
 type Position struct {
-	row    int
-	column int
+	row       int
+	column    int
+	direction Direction
 }
 
 // State variables for Guard
@@ -73,7 +74,7 @@ func (g *Guard) MoveFoward(inputMap [][]string) {
 	} else if inputMap[nextPosition.row][nextPosition.column] == Wall {
 		// We cannot walk through a wall
 		g.turnClockwise()
-		g.MoveFoward(inputMap)
+		// g.MoveFoward(inputMap)
 	} else {
 		g.row = nextPosition.row
 		g.column = nextPosition.column
@@ -89,15 +90,15 @@ func (g *Guard) MoveFoward(inputMap [][]string) {
 func (g *Guard) getNextPosition() Position {
 	switch g.direction {
 	case Up:
-		return Position{g.row - 1, g.column}
+		return Position{g.row - 1, g.column, g.direction}
 	case Right:
-		return Position{g.row, g.column + 1}
+		return Position{g.row, g.column + 1, g.direction}
 	case Down:
-		return Position{g.row + 1, g.column}
+		return Position{g.row + 1, g.column, g.direction}
 	case Left:
-		return Position{g.row, g.column - 1}
+		return Position{g.row, g.column - 1, g.direction}
 	}
-	return Position{g.row, g.column}
+	return Position{g.row, g.column, g.direction}
 }
 
 func (g *Guard) turnClockwise() {
@@ -113,9 +114,18 @@ func (g *Guard) withinBoundary(position Position, inputMap [][]string) bool {
 
 func Part1(inputMap [][]string) int {
 	guard, _ := NewGuard(inputMap)
+	seen := make(map[Position]struct{})
+
+	initPosition := Position{row: guard.row, column: guard.column, direction: guard.direction}
+	seen[initPosition] = struct{}{}
 
 	for guard.isPatrolling {
 		guard.MoveFoward(inputMap)
+		newPosition := Position{row: guard.row, column: guard.column, direction: guard.direction}
+		if _, ok := seen[newPosition]; ok {
+			// prevents loops
+			return guard.steps
+		}
 	}
 
 	return guard.steps
@@ -132,4 +142,24 @@ func To2DMatrix(input []string) [][]string {
 		}
 	}
 	return output
+}
+
+func HasLoop(inputMap [][]string) bool {
+	// We need to get back to a position we've seen
+	seen := make(map[Position]struct{})
+	guard, _ := NewGuard(inputMap)
+
+	initPosition := Position{row: guard.row, column: guard.column, direction: guard.direction}
+	seen[initPosition] = struct{}{}
+
+	for guard.isPatrolling {
+		guard.MoveFoward(inputMap)
+		newPosition := Position{row: guard.row, column: guard.column, direction: guard.direction}
+		_, hasBeenVisited := seen[newPosition]
+		if hasBeenVisited {
+			return true
+		}
+	}
+
+	return false
 }

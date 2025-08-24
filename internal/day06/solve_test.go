@@ -45,8 +45,8 @@ func TestGuardMoveForward(t *testing.T) {
 		inputMap [][]string
 	}{
 		{name: "moves forward 1 step", want: Guard{row: 0, column: 1, steps: 2, direction: Up, isPatrolling: true, visited: [][]bool{{false, true}, {false, true}}}, inputMap: [][]string{{".", "."}, {".", "^"}}},
-		{name: "facing up against wall, rotate right 90 degrees", want: Guard{row: 1, column: 1, steps: 2, direction: Right, isPatrolling: true, visited: [][]bool{{false, false}, {true, true}}}, inputMap: [][]string{{"#", "."}, {"^", "."}}},
-		{name: "facing left against wall, rotate right 90 degrees", want: Guard{row: 0, column: 1, steps: 2, direction: Up, isPatrolling: true, visited: [][]bool{{false, true}, {false, true}}}, inputMap: [][]string{{".", "."}, {"#", "<"}}},
+		{name: "facing up against wall, rotate right 90 degrees", want: Guard{row: 1, column: 0, steps: 1, direction: Right, isPatrolling: true, visited: [][]bool{{false, false}, {true, false}}}, inputMap: [][]string{{"#", "."}, {"^", "."}}},
+		{name: "facing left against wall, rotate right 90 degrees", want: Guard{row: 1, column: 1, steps: 1, direction: Up, isPatrolling: true, visited: [][]bool{{false, false}, {false, true}}}, inputMap: [][]string{{".", "."}, {"#", "<"}}},
 		{name: "guard leaves the map", want: Guard{row: 0, column: 0, steps: 1, direction: Up, isPatrolling: false, visited: [][]bool{{true, false}, {false, false}}}, inputMap: [][]string{{"^", "."}, {".", "."}}},
 	}
 
@@ -85,6 +85,26 @@ func TestPart1(t *testing.T) {
 			t.Errorf("got %d, want %d", got, tt.want)
 		}
 	}
+}
+
+// Part 2
+// To determine if we can produce a loop from placing an obstruction, we need to simulate adding an obstruction
+// at any point infront of the guard and rerunning to see if we end up back at the starting point in the direction
+// we started with. Unique composition is (x, y, direction)
+
+func TestHasLoop(t *testing.T) {
+
+	t.Run("has a loop in input map", func(t *testing.T) {
+		inputMap := [][]string{{".", "#", "."}, {"#", "^", "#"}, {".", "#", "."}}
+
+		got := HasLoop(inputMap)
+		want := true
+
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+
+	})
 }
 
 func assertError(t testing.TB, got, want error) {
