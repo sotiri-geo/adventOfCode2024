@@ -36,6 +36,35 @@ func TestNewGuard(t *testing.T) {
 	})
 }
 
+func TestGuardMoveForward(t *testing.T) {
+	cases := []struct {
+		name     string
+		want     Guard
+		inputMap [][]string
+	}{
+		{name: "moves forward 1 step", want: Guard{row: 0, column: 1, steps: 2, direction: Up}, inputMap: [][]string{{".", "."}, {".", "^"}}},
+		{name: "facing wall, rotate right 90 degrees", want: Guard{row: 1, column: 1, steps: 2, direction: Right}, inputMap: [][]string{{"#", "."}, {"^", "."}}},
+	}
+
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := NewGuard(tt.inputMap)
+			t.Logf("Starts with Guard: %+v", *got)
+
+			got.MoveFoward(tt.inputMap)
+
+			if err != nil {
+				t.Fatalf("should not have errored. Found: %v", err)
+			}
+
+			if *got != tt.want {
+				t.Errorf("got %+v, want %+v", *got, tt.want)
+			}
+
+		})
+	}
+}
+
 func assertError(t testing.TB, got, want error) {
 	t.Helper()
 

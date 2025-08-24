@@ -18,13 +18,20 @@ const (
 	Left
 )
 
+const Wall = "#"
+
+type Position struct {
+	row    int
+	column int
+}
+
 // State variables for Guard
 // row, column, direction
 type Guard struct {
-	row           int
-	column        int
-	direction     Direction
-	positionCount int
+	row       int
+	column    int
+	direction Direction
+	steps     int // starts at 1
 }
 
 func NewGuard(inputMap [][]string) (*Guard, error) {
@@ -44,4 +51,46 @@ func NewGuard(inputMap [][]string) (*Guard, error) {
 		}
 	}
 	return nil, ErrNotFoundGuardStartPosition
+}
+
+func (g *Guard) MoveFoward(inputMap [][]string) {
+	nextPosition := g.getNextPosition()
+
+	if inputMap[nextPosition.row][nextPosition.column] == Wall {
+		// We need to rotate 90 degrees then recursively call Move forward
+		g.turn()
+		g.MoveFoward(inputMap)
+	} else {
+		g.row = nextPosition.row
+		g.column = nextPosition.column
+		g.steps++
+	}
+}
+
+func (g *Guard) getNextPosition() Position {
+	switch g.direction {
+	case Up:
+		return Position{g.row - 1, g.column}
+	case Right:
+		return Position{g.row, g.column + 1}
+	case Down:
+		return Position{g.row + 1, g.column}
+	case Left:
+		return Position{g.row, g.column - 1}
+	}
+	return Position{g.row, g.column}
+}
+
+// TODO: potential to refactor using mods
+func (g *Guard) turn() {
+	switch g.direction {
+	case Up:
+		g.direction = Right
+	case Right:
+		g.direction = Down
+	case Down:
+		g.direction = Left
+	case Left:
+		g.direction = Up
+	}
 }
