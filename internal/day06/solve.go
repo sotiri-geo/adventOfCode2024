@@ -33,6 +33,7 @@ type Guard struct {
 	direction    Direction
 	steps        int  // starts at 1
 	isPatrolling bool // guard in map
+	visited      [][]bool
 }
 
 func NewGuard(inputMap [][]string) (*Guard, error) {
@@ -47,11 +48,19 @@ func NewGuard(inputMap [][]string) (*Guard, error) {
 			object := inputMap[ridx][cidx]
 			direction, ok := directions[object]
 			if ok {
-				return &Guard{ridx, cidx, direction, 1, true}, nil
+				return &Guard{ridx, cidx, direction, 1, true, newBoolGridFrom(inputMap)}, nil
 			}
 		}
 	}
 	return nil, ErrNotFoundGuardStartPosition
+}
+
+func newBoolGridFrom[T any](src [][]T) [][]bool {
+	dst := make([][]bool, len(src))
+	for i := range src {
+		dst[i] = make([]bool, len(src[i]))
+	}
+	return dst
 }
 
 func (g *Guard) MoveFoward(inputMap [][]string) {
