@@ -110,3 +110,13 @@ func (g *Guard) withinBoundary(position Position, inputMap [][]string) bool {
 
 	return position.row >= 0 && position.row < rowLength && position.column >= 0 && position.column < columnLength
 }
+
+func Part1(labInput [][]string) int {
+	guard, _ := NewGuard(labInput)
+
+	for guard.isPatrolling {
+		guard.MoveFoward(labInput)
+	}
+
+	return guard.steps
+}

@@ -53,7 +53,6 @@ func TestGuardMoveForward(t *testing.T) {
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := NewGuard(tt.inputMap)
-			t.Logf("Starts with Guard: %+v", *got)
 
 			got.MoveFoward(tt.inputMap)
 
@@ -69,13 +68,24 @@ func TestGuardMoveForward(t *testing.T) {
 	}
 }
 
-// func TestPart1(t *testing.T) {
-//     t.Run("2x2 lab", func(t *testing.T) {
-//         labInput := [][]string{{".", "."}, {".", "^"}}
-//         got := Part1(labInput)
-//         want := 2
-//     })
-// }
+func TestPart1(t *testing.T) {
+	cases := []struct {
+		name     string
+		inputMap [][]string
+		want     int
+	}{
+		{name: "2x2 map", inputMap: [][]string{{".", "."}, {".", "^"}}, want: 2},
+		{name: "counts only distinct positions", inputMap: [][]string{{"#", ".", "."}, {".", ".", "#"}, {"^", "#", "."}}, want: 3},
+	}
+
+	for _, tt := range cases {
+		got := Part1(tt.inputMap)
+
+		if got != tt.want {
+			t.Errorf("got %d, want %d", got, tt.want)
+		}
+	}
+}
 
 func assertError(t testing.TB, got, want error) {
 	t.Helper()
