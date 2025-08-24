@@ -111,12 +111,25 @@ func (g *Guard) withinBoundary(position Position, inputMap [][]string) bool {
 	return position.row >= 0 && position.row < rowLength && position.column >= 0 && position.column < columnLength
 }
 
-func Part1(labInput [][]string) int {
-	guard, _ := NewGuard(labInput)
+func Part1(inputMap [][]string) int {
+	guard, _ := NewGuard(inputMap)
 
 	for guard.isPatrolling {
-		guard.MoveFoward(labInput)
+		guard.MoveFoward(inputMap)
 	}
 
 	return guard.steps
+}
+
+func To2DMatrix(input []string) [][]string {
+	output := make([][]string, len(input))
+
+	for row := 0; row < len(input); row++ {
+		// allocate each row with a slice of size len(input[row])
+		output[row] = make([]string, len(input[row]))
+		for col := 0; col < len(input[row]); col++ {
+			output[row][col] = string(input[row][col])
+		}
+	}
+	return output
 }
