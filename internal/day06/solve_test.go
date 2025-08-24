@@ -107,6 +107,43 @@ func TestHasLoop(t *testing.T) {
 	})
 }
 
+func TestPart2(t *testing.T) {
+
+	t.Run("counting positions to add obstruction to form a loop", func(t *testing.T) {
+		input := []string{"....#.....",
+			".........#",
+			"..........",
+			"..#.......",
+			".......#..",
+			"..........",
+			".#..^.....",
+			"........#.",
+			"#.........",
+			"......#...",
+		}
+
+		inputMap := To2DMatrix(input)
+
+		got := Part2(inputMap)
+		want := 6
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
+
+	t.Run("1 obstruction required for loop", func(t *testing.T) {
+		inputMap := [][]string{{".", "#", "."}, {"#", "^", "#"}, {".", ".", "."}}
+
+		got := Part2(inputMap)
+		want := 1
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
+}
+
 func assertError(t testing.TB, got, want error) {
 	t.Helper()
 

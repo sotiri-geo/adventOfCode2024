@@ -18,4 +18,5 @@ func main() {
 	inputMap := day06.To2DMatrix(strings.Split(strings.TrimSpace(string(data)), "\n"))
 
 	fmt.Println("Part 1:", day06.Part1(inputMap))
+	fmt.Println("Part 2:", day06.Part2(inputMap))
 }

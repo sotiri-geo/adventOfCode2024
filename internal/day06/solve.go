@@ -149,17 +149,38 @@ func HasLoop(inputMap [][]string) bool {
 	seen := make(map[Position]struct{})
 	guard, _ := NewGuard(inputMap)
 
-	initPosition := Position{row: guard.row, column: guard.column, direction: guard.direction}
-	seen[initPosition] = struct{}{}
-
 	for guard.isPatrolling {
-		guard.MoveFoward(inputMap)
-		newPosition := Position{row: guard.row, column: guard.column, direction: guard.direction}
-		_, hasBeenVisited := seen[newPosition]
-		if hasBeenVisited {
-			return true
+		currentPosition := Position{row: guard.row, column: guard.column, direction: guard.direction}
+		if _, exists := seen[currentPosition]; exists {
+			return true // loop detected
 		}
+
+		seen[currentPosition] = struct{}{}
+		guard.MoveFoward(inputMap)
 	}
 
 	return false
+}
+
+func Part2(inputMap [][]string) int {
+	count := 0
+
+	// Get guards starting position to avoid placing obstruction there
+	guard, _ := NewGuard(inputMap)
+	startRow, startCol := guard.row, guard.column
+
+	for i := range inputMap {
+		for j := range inputMap[i] {
+			if inputMap[i][j] == "." && !(i == startRow && j == startCol) {
+				// attempt an obstruction
+				inputMap[i][j] = "#"
+				if HasLoop(inputMap) {
+					count++
+				}
+				// Restore original value
+				inputMap[i][j] = "."
+			}
+		}
+	}
+	return count
 }
