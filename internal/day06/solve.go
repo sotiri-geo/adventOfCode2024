@@ -48,7 +48,9 @@ func NewGuard(inputMap [][]string) (*Guard, error) {
 			object := inputMap[ridx][cidx]
 			direction, ok := directions[object]
 			if ok {
-				return &Guard{ridx, cidx, direction, 1, true, newBoolGridFrom(inputMap)}, nil
+				visited := newBoolGridFrom(inputMap)
+				visited[ridx][cidx] = true
+				return &Guard{ridx, cidx, direction, 1, true, visited}, nil
 			}
 		}
 	}
@@ -75,7 +77,12 @@ func (g *Guard) MoveFoward(inputMap [][]string) {
 	} else {
 		g.row = nextPosition.row
 		g.column = nextPosition.column
-		g.steps++
+		// Only increment step if not visited before
+		if !g.visited[g.row][g.column] {
+			g.steps++
+		}
+
+		g.visited[g.row][g.column] = true
 	}
 }
 
