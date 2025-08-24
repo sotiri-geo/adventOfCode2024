@@ -43,7 +43,8 @@ func TestGuardMoveForward(t *testing.T) {
 		inputMap [][]string
 	}{
 		{name: "moves forward 1 step", want: Guard{row: 0, column: 1, steps: 2, direction: Up}, inputMap: [][]string{{".", "."}, {".", "^"}}},
-		{name: "facing wall, rotate right 90 degrees", want: Guard{row: 1, column: 1, steps: 2, direction: Right}, inputMap: [][]string{{"#", "."}, {"^", "."}}},
+		{name: "facing up against wall, rotate right 90 degrees", want: Guard{row: 1, column: 1, steps: 2, direction: Right}, inputMap: [][]string{{"#", "."}, {"^", "."}}},
+		{name: "facing left against wall, rotate right 90 degrees", want: Guard{row: 0, column: 1, steps: 2, direction: Up}, inputMap: [][]string{{".", "."}, {"#", "<"}}},
 	}
 
 	for _, tt := range cases {

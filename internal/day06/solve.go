@@ -81,16 +81,6 @@ func (g *Guard) getNextPosition() Position {
 	return Position{g.row, g.column}
 }
 
-// TODO: potential to refactor using mods
 func (g *Guard) turn() {
-	switch g.direction {
-	case Up:
-		g.direction = Right
-	case Right:
-		g.direction = Down
-	case Down:
-		g.direction = Left
-	case Left:
-		g.direction = Up
-	}
+	g.direction = (g.direction + 1) % 4
 }
