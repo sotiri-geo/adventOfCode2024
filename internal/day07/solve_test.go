@@ -1,6 +1,9 @@
 package day07
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 /*
 190: 10 19
@@ -33,6 +36,20 @@ func TestIsCalibrated(t *testing.T) {
 				t.Errorf("got %v, want %v", got, tt.Want)
 			}
 		})
+	}
+}
+
+func TestParseInput(t *testing.T) {
+	input := []string{"190: 10 19", "32: 81 4 27"}
+
+	got := ParseInput(input)
+	want := map[int][]int{
+		190: []int{10, 19},
+		32:  []int{81, 4, 27},
+	}
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %+v, want %+v", got, want)
 	}
 }
 
