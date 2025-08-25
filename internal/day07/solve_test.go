@@ -9,8 +9,8 @@ import (
 190: 10 19
 
   10
-+   *
-19   190
++   *    ||
+29   190
 
 state variables is an index. We will create a binary tree, where we evaluate the leafs to see
 if the value is target. if not returns false
@@ -37,6 +37,32 @@ func TestIsCalibrated(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestIsCalibratedWithConcat(t *testing.T) {
+	t.Run("concat operation of two numbers", func(t *testing.T) {
+		target := 156
+		calibrations := []int{15, 6}
+		want := true
+
+		got := IsCalibratedWithConcat(calibrations[1:], calibrations[0], target)
+
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("|| and * operators", func(t *testing.T) {
+		target := 7290
+		calibrations := []int{6, 8, 6, 15}
+		want := true
+
+		got := IsCalibratedWithConcat(calibrations[1:], calibrations[0], target)
+
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
 }
 
 func TestParseInput(t *testing.T) {
@@ -69,6 +95,29 @@ func TestPart1(t *testing.T) {
 
 		got := Part1(input)
 		want := 3749
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
+}
+
+func TestPart2(t *testing.T) {
+	t.Run("total of all possible calibrations with concat operation", func(t *testing.T) {
+		input := map[int][]int{
+			190:    []int{10, 19},
+			3267:   []int{81, 40, 27},
+			83:     []int{17, 5},
+			156:    []int{15, 6},
+			7290:   []int{6, 8, 6, 15},
+			161011: []int{16, 10, 13},
+			192:    []int{17, 8, 14},
+			21037:  []int{9, 7, 18, 13},
+			292:    []int{11, 6, 16, 20},
+		}
+
+		got := Part2(input)
+		want := 11387
 
 		if got != want {
 			t.Errorf("got %d, want %d", got, want)
